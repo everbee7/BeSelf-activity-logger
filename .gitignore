@@ -1,0 +1,8 @@
+dist/
+*.db
+*.db-shm
+*.db-wal
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
