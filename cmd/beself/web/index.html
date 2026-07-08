@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BeSelf</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div>
+          <h1>BeSelf</h1>
+          <p class="muted">Local activity timeline</p>
+        </div>
+        <div class="controls">
+          <input id="date" type="date" aria-label="Date">
+          <button id="tracking" type="button"></button>
+          <button id="startup" type="button"></button>
+        </div>
+      </header>
+
+      <section class="metrics" aria-label="Daily totals">
+        <article>
+          <span>Worked</span>
+          <strong id="worked">0m</strong>
+        </article>
+        <article>
+          <span>Week avg</span>
+          <strong id="weekAvg">0m</strong>
+        </article>
+        <article>
+          <span>Locked</span>
+          <strong id="locked">0m</strong>
+        </article>
+        <article>
+          <span>Idle</span>
+          <strong id="idle">0m</strong>
+        </article>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Weekly Statistics</h2>
+          <p class="muted" id="weekTotal">0m total active</p>
+        </div>
+        <div id="weekChart" class="week-chart" aria-label="Weekly active hours"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Timeline</h2>
+          <div class="legend">
+            <span><i class="active"></i> Active</span>
+            <span><i class="locked"></i> Locked</span>
+            <span><i class="idle"></i> Idle</span>
+          </div>
+        </div>
+        <div id="timeline" class="timeline" aria-label="Day timeline"></div>
+        <div id="tooltip" class="tooltip" hidden></div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>Programs Today</h2>
+          <div id="programList" class="program-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Program Usage</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Program</th>
+                <th>Total</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>% Active</th>
+              </tr>
+            </thead>
+            <tbody id="programTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>
