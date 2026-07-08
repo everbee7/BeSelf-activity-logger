@@ -25,7 +25,13 @@ rsrc -manifest cmd/beself/app.manifest -o cmd/beself/rsrc.syso
 
 ## Installer
 
-Install Inno Setup, then compile `installer/BeSelf.iss`. The installer includes the executable, creates Start Menu entries, and supports uninstall. Startup with Windows is controlled inside the app through the tray menu or dashboard.
+The compiled installer is `installer/BeSelfSetup.exe`.
+
+To rebuild it, install Inno Setup and compile `installer/BeSelf.iss`. The installer includes the executable, creates Start Menu entries, and supports uninstall. Startup with Windows is controlled inside the app through the tray menu or dashboard.
+
+## Guide
+
+See [GUIDE.md](GUIDE.md) for usage, architecture, storage, install, and troubleshooting notes.
 
 ## Privacy
 

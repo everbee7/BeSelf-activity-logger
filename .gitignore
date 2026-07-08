@@ -1,4 +1,5 @@
 dist/
+installer/*.exe
 *.db
 *.db-shm
 *.db-wal
