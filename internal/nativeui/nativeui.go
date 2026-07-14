@@ -381,7 +381,12 @@ func (d *Dashboard) drawWeekStats(canvas *walk.Canvas, content walk.Rectangle) {
 	}
 	for i, day := range d.week.Days {
 		x := graph.X + barGap + i*(barW+barGap)
-		d.regions["week:"+day.Date] = walk.Rectangle{X: x - 4, Y: graph.Y, Width: barW + 8, Height: graph.Height}
+		dayRegion := walk.Rectangle{X: x - 8, Y: r.Y + 42, Width: barW + 16, Height: r.Y + r.Height - (r.Y + 42) - 10}
+		d.regions["week:"+day.Date] = dayRegion
+		if day.Date == d.day.Format("2006-01-02") {
+			fill(canvas, walk.RGB(42, 39, 25), dayRegion)
+			border(canvas, dayRegion, cOrange2)
+		}
 		h := int(float64(day.ActiveSeconds) / float64(maxSeconds) * float64(graph.Height-22))
 		if h < 2 && day.ActiveSeconds > 0 {
 			h = 2

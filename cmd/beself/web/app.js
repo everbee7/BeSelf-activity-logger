@@ -3,6 +3,7 @@ const trackingButton = document.querySelector("#tracking");
 const startupButton = document.querySelector("#startup");
 const tooltip = document.querySelector("#tooltip");
 const timelineEl = document.querySelector("#timeline");
+const weekChartEl = document.querySelector("#weekChart");
 let currentData = null;
 let selectedRange = null;
 let selecting = false;
@@ -19,6 +20,7 @@ dateInput.value = new Date().toISOString().slice(0, 10);
 dateInput.addEventListener("change", load);
 timelineEl.addEventListener("mousedown", startTimelineSelection);
 timelineEl.addEventListener("mousemove", moveTimelineSelection);
+weekChartEl.addEventListener("click", selectWeekDay);
 window.addEventListener("mouseup", finishTimelineSelection);
 trackingButton.addEventListener("click", async () => {
   const enabled = trackingButton.dataset.enabled !== "true";
@@ -180,25 +182,29 @@ function filteredPrograms() {
 }
 
 function renderWeek(week) {
-  const el = document.querySelector("#weekChart");
-  el.innerHTML = "";
+  weekChartEl.innerHTML = "";
   const max = Math.max(1, ...week.days.map(day => day.activeSeconds));
   for (const day of week.days) {
     const item = document.createElement("div");
     item.className = "week-bar";
+    item.classList.toggle("selected", day.date === dateInput.value);
     item.dataset.date = day.date;
     const date = new Date(`${day.date}T00:00:00`);
     item.innerHTML = `
       <div class="bar-track"><i style="height:${Math.max(2, day.activeSeconds / max * 100)}%"></i></div>
       <span>${date.toLocaleDateString([], { weekday: "short" })}</span>
       <strong>${duration(day.activeSeconds)}</strong>`;
-    item.addEventListener("click", () => {
-      dateInput.value = day.date;
-      selectedRange = null;
-      load();
-    });
-    el.appendChild(item);
+    weekChartEl.appendChild(item);
   }
+}
+
+function selectWeekDay(event) {
+  const item = event.target.closest(".week-bar");
+  if (!item || !weekChartEl.contains(item) || !item.dataset.date) return;
+  if (dateInput.value === item.dataset.date) return;
+  dateInput.value = item.dataset.date;
+  selectedRange = null;
+  load();
 }
 
 function renderPrograms(programs) {

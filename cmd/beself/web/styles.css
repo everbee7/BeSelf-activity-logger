@@ -254,6 +254,15 @@ tr:hover td {
   transform: translateY(-2px);
 }
 
+.week-bar.selected .bar-track {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(252, 213, 53, 0.28), 0 0 18px rgba(240, 185, 11, 0.18);
+}
+
+.week-bar.selected strong {
+  color: var(--accent);
+}
+
 .bar-track {
   height: 78px;
   background: var(--surface-2);
