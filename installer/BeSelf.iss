@@ -1,5 +1,5 @@
 #define MyAppName "BeSelf"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "0.1.1"
 #define MyAppPublisher "BeSelf"
 #define MyAppExeName "BeSelf.exe"
 
