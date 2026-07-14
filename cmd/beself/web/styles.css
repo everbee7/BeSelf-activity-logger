@@ -245,6 +245,13 @@ tr:hover td {
   gap: 6px;
   min-width: 0;
   text-align: center;
+  cursor: pointer;
+  transition: transform 180ms ease, filter 180ms ease;
+}
+
+.week-bar:hover {
+  filter: brightness(1.12);
+  transform: translateY(-2px);
 }
 
 .bar-track {

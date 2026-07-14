@@ -186,11 +186,17 @@ function renderWeek(week) {
   for (const day of week.days) {
     const item = document.createElement("div");
     item.className = "week-bar";
+    item.dataset.date = day.date;
     const date = new Date(`${day.date}T00:00:00`);
     item.innerHTML = `
       <div class="bar-track"><i style="height:${Math.max(2, day.activeSeconds / max * 100)}%"></i></div>
       <span>${date.toLocaleDateString([], { weekday: "short" })}</span>
       <strong>${duration(day.activeSeconds)}</strong>`;
+    item.addEventListener("click", () => {
+      dateInput.value = day.date;
+      selectedRange = null;
+      load();
+    });
     el.appendChild(item);
   }
 }

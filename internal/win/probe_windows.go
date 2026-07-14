@@ -15,6 +15,7 @@ import (
 const (
 	processQueryLimitedInformation = 0x1000
 	desktopSwitchDesktop           = 0x0100
+	uoiName                        = 2
 )
 
 var (
@@ -27,6 +28,7 @@ var (
 	procOpenInputDesktop      = user32.NewProc("OpenInputDesktop")
 	procSwitchDesktop         = user32.NewProc("SwitchDesktop")
 	procCloseDesktop          = user32.NewProc("CloseDesktop")
+	procGetUserObjectInfo     = user32.NewProc("GetUserObjectInformationW")
 	procGetTickCount64        = kernel32.NewProc("GetTickCount64")
 	procQueryFullProcessImage = kernel32.NewProc("QueryFullProcessImageNameW")
 )
@@ -90,8 +92,31 @@ func (p *Probe) IsLocked() bool {
 		return true
 	}
 	defer procCloseDesktop.Call(desk)
+	if name := strings.ToLower(desktopName(windows.Handle(desk))); name != "" && name != "default" {
+		return true
+	}
 	ok, _, _ := procSwitchDesktop.Call(desk)
 	return ok == 0
+}
+
+func desktopName(desktop windows.Handle) string {
+	var needed uint32
+	procGetUserObjectInfo.Call(uintptr(desktop), uoiName, 0, 0, uintptr(unsafe.Pointer(&needed)))
+	if needed == 0 {
+		return ""
+	}
+	buf := make([]uint16, needed/2+1)
+	ok, _, _ := procGetUserObjectInfo.Call(
+		uintptr(desktop),
+		uoiName,
+		uintptr(unsafe.Pointer(&buf[0])),
+		uintptr(needed),
+		uintptr(unsafe.Pointer(&needed)),
+	)
+	if ok == 0 {
+		return ""
+	}
+	return strings.TrimSpace(windows.UTF16ToString(buf))
 }
 
 func windowText(hwnd windows.Handle) string {

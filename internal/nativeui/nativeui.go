@@ -381,6 +381,7 @@ func (d *Dashboard) drawWeekStats(canvas *walk.Canvas, content walk.Rectangle) {
 	}
 	for i, day := range d.week.Days {
 		x := graph.X + barGap + i*(barW+barGap)
+		d.regions["week:"+day.Date] = walk.Rectangle{X: x - 4, Y: graph.Y, Width: barW + 8, Height: graph.Height}
 		h := int(float64(day.ActiveSeconds) / float64(maxSeconds) * float64(graph.Height-22))
 		if h < 2 && day.ActiveSeconds > 0 {
 			h = 2
@@ -757,6 +758,7 @@ func (d *Dashboard) mouseDown(x, y int, button walk.MouseButton) {
 		d.refresh()
 	case in(d.regions["web"], x, y):
 		_ = exec.Command("rundll32", "url.dll,FileProtocolHandler", d.apiURL).Start()
+	case d.selectWeekDay(x, y):
 	case in(d.regions["timeline"], x, y):
 		t := d.timeAtTimelineX(x)
 		d.rangeStart = &t
@@ -778,6 +780,8 @@ func (d *Dashboard) updateCursor(x, y int) {
 		d.canvas.SetCursor(walk.CursorSizeNWSE())
 	case d.isHot(x, y):
 		d.canvas.SetCursor(walk.CursorHand())
+	case d.weekDateAt(x, y) != "":
+		d.canvas.SetCursor(walk.CursorHand())
 	case in(d.regions["timeline"], x, y):
 		d.canvas.SetCursor(walk.CursorCross())
 	default:
@@ -792,6 +796,34 @@ func (d *Dashboard) isHot(x, y int) bool {
 		}
 	}
 	return false
+}
+
+func (d *Dashboard) selectWeekDay(x, y int) bool {
+	date := d.weekDateAt(x, y)
+	if date == "" {
+		return false
+	}
+	day, err := time.ParseInLocation("2006-01-02", date, time.Local)
+	if err != nil {
+		return false
+	}
+	d.day = dayStart(day)
+	d.rangeStart = nil
+	d.rangeEnd = nil
+	d.selectingRange = false
+	d.selectedSession = nil
+	d.programScroll = 0
+	d.refresh()
+	return true
+}
+
+func (d *Dashboard) weekDateAt(x, y int) string {
+	for id, r := range d.regions {
+		if strings.HasPrefix(id, "week:") && in(r, x, y) {
+			return strings.TrimPrefix(id, "week:")
+		}
+	}
+	return ""
 }
 
 func (d *Dashboard) mouseUp(x, y int, button walk.MouseButton) {

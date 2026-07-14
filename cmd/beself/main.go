@@ -63,7 +63,7 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	engine := tracker.New(db, win.NewProbe(), tracker.Config{PollInterval: time.Second, IdleThreshold: 5 * time.Minute})
+	engine := tracker.New(db, win.NewProbe(), tracker.Config{PollInterval: time.Second, IdleThreshold: 3 * time.Minute})
 	if enabled, _ := db.BoolSetting(store.SettingTrackingEnabled, true); enabled {
 		engine.Start()
 	}

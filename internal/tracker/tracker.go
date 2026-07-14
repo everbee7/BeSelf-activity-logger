@@ -36,7 +36,7 @@ func New(db *store.DB, probe *win.Probe, config Config) *Tracker {
 		config.PollInterval = time.Second
 	}
 	if config.IdleThreshold <= 0 {
-		config.IdleThreshold = 5 * time.Minute
+		config.IdleThreshold = 3 * time.Minute
 	}
 	return &Tracker{db: db, probe: probe, config: config}
 }
